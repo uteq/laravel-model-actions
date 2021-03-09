@@ -17,8 +17,8 @@ User::action('update', $input);
 ```
 
 This package was inspired by this read about OOP: https://www.tonysm.com/when-objects-are-not-enough/#objects-in-the-large
-Especially the last part about actions being liked to models made sense to me.
-This will keep your models clean and your actions separated.
+Especially the last part about actions being added to a model made sense to me.
+This will keep your models clean, and your actions separated.
 
 You will need php 8.0
 
