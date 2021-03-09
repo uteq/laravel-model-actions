@@ -9,11 +9,11 @@
 This package will magically add actions to a model. Simply adding the WithActions trait:
 
 ```php
-User::action()->update($input);
+$user->action()->update($input);
 ```
 or
 ```php
-User::action('update', $input);
+$user->action('update', $input);
 ```
 
 This package was inspired by this read about OOP: https://www.tonysm.com/when-objects-are-not-enough/#objects-in-the-large
@@ -99,8 +99,8 @@ The name of the Action class will be used as the method name.
 So a class UpdateImage will be accessible using User::action()->update($input); 
 
 ```php
-User::action()->update($input);
 $user->action()->update($input);
+$user->action('update', $input);
 ```
 
 ## Dependency injection in Actions

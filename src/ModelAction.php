@@ -2,7 +2,6 @@
 
 namespace Uteq\ModelActions;
 
-use BadMethodCallException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use ReflectionClass;
@@ -54,17 +53,15 @@ class ModelAction
         if (isset($this->actions[$method])) {
             $actionMethod = config('model-actions.method');
 
-            $action = app()->make(new $this->actions[$method]);
+            $action = app()->make($this->actions[$method]);
 
             return $actionMethod
                 ? $action->{$actionMethod}($this->class, $arguments)
                 : $action($this->class, $arguments);
         }
 
-        throw new BadMethodCallException(sprintf(
-            'Call to undefined method %s::%s()',
-            static::class,
-            $method
-        ));
+        $class = $this->namespace . '\\' . ucfirst($method);
+
+        throw new \Exception(sprintf('Class not found `%s`', $class), 500);
     }
 }
