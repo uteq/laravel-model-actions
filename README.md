@@ -6,15 +6,21 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/uteq/laravel-model-actions.svg?style=flat-square)](https://packagist.org/packages/uteq/laravel-model-actions)
 
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+This package will magically add actions to a model. Simply adding the WithActions trait:
 
-## Support us
+```php
+User::action()->update($input);
+```
+or
+```php
+User::action('update', $input);
+```
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/package-laravel-model-actions-laravel.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/package-laravel-model-actions-laravel)
+This package was inspired by this read about OOP: https://www.tonysm.com/when-objects-are-not-enough/#objects-in-the-large
+Especially the last part about actions being liked to models made sense to me.
+This will keep your models clean and your actions separated.
 
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+You will need php 8.0
 
 ## Installation
 
@@ -22,13 +28,6 @@ You can install the package via composer:
 
 ```bash
 composer require uteq/laravel-model-actions
-```
-
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --provider="Uteq\ModelActions\ModelActionsServiceProvider" --tag="laravel-model-actions-migrations"
-php artisan migrate
 ```
 
 You can publish the config file with:
@@ -40,14 +39,86 @@ This is the contents of the published config file:
 
 ```php
 return [
+    /**
+     * The namespace where to find the actions.
+     * By default it will look for the actions one folder up
+     * than the Actions folder and than the folder name with the name of the class.
+     */
+    'namespace' => null,
+
+    /**
+     * You can overwrite the method used to handle the
+     * action. By default this is __invoke.
+     */
+    'method' => null,    
 ];
 ```
-
 ## Usage
 
+Add the WithActions trait to the model
 ```php
-$laravel-model-actions = new Uteq\ModelActions();
-echo $laravel-model-actions->echoPhrase('Hello, Uteq!');
+use Uteq\ModelActions\Concerns\WithActions;
+use Illuminate\Database\Eloquent\Model;
+
+class User extends Model
+{
+    use WithActions;
+}
+```
+
+The actions should be added in the following folder structure
+
+```
+App
+├── Actions
+│   └── User
+│       ├── Create.php 
+│       ├── Update.php 
+│       ├── Destroy.php
+│       └── AddImage.php
+└── Models
+    └── User.php
+```
+
+After that you can always access the actions from your model:
+
+This is how an action class looks like:
+
+```php
+class Update
+{
+    public function __invoke(User $user, array $input = [])
+    {
+        // Now add you own logic here
+    }
+}
+```
+As you can see the $user will automatically be injected into the __invoke method.
+
+The name of the Action class will be used as the method name.
+So a class UpdateImage will be accessible using User::action()->update($input); 
+
+```php
+User::action()->update($input);
+$user->action()->update($input);
+```
+
+## Dependency injection in Actions
+Dependency injection in the __construct of the is by default.
+So you can do this:
+
+```php
+class Destroy
+{
+    public function __construct(
+        PublicDestroyer $destroyer,
+    ) { }
+    
+    public __invoke(User $user, array $input = [])
+    {
+        $this->destroyer($user, $input);
+    }
+}
 ```
 
 ## Testing
@@ -70,7 +141,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Credits
 
-- [Nathan Jansen](https://github.com/NathanJansen)
+- [Nathan Jansen](https://github.com/nathanjansen)
 - [All Contributors](../../contributors)
 
 ## License

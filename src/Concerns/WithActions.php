@@ -8,8 +8,15 @@ trait WithActions
 {
     protected static $actionClass;
 
-    public static function action()
+    public static function action($action = null, array $input = [])
     {
-        return static::$actionClass ??= new ModelAction(new static);
+        $actionClass = static::$actionClass ??= new ModelAction(
+            class: new static,
+            namespace: config('model-actions.namespace'),
+        );
+
+        return $action
+            ? $actionClass->{$action}($input)
+            : $actionClass;
     }
 }

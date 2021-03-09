@@ -53,7 +53,13 @@ class ModelAction
     public function __call($method, $arguments)
     {
         if (isset($this->actions[$method])) {
-            return (new $this->actions[$method])(...$arguments);
+            $actionMethod = config('model-actions.method');
+
+            $action = app()->make(new $this->actions[$method]);
+
+            return $actionMethod
+                ? $action->{$actionMethod}($this->class, $arguments)
+                : $action($this->class, $arguments);
         }
 
         throw new BadMethodCallException(sprintf(
