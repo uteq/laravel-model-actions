@@ -4,7 +4,6 @@ namespace Uteq\ModelActions;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Uteq\ModelActions\Commands\ModelActionsCommand;
 
 class ModelActionsServiceProvider extends PackageServiceProvider
 {
