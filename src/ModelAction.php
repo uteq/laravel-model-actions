@@ -15,8 +15,7 @@ class ModelAction
         public $namespace = null,
         public ?Filesystem $filesystem = null,
         public array $actions = [],
-    )
-    {
+    ) {
         $this->init();
     }
 
@@ -27,8 +26,8 @@ class ModelAction
         $this->filesystem ??= new Filesystem;
 
         $this->actions = collect($this->filesystem->allFiles($this->getPath()))
-            ->mapWithKeys(fn(SplFileInfo $file) => [
-                lcfirst($file->getBasename('.php')) => $this->namespace . '\\' . $file->getBasename('.php')
+            ->mapWithKeys(fn (SplFileInfo $file) => [
+                lcfirst($file->getBasename('.php')) => $this->namespace . '\\' . $file->getBasename('.php'),
             ])
             ->toArray();
     }
@@ -63,7 +62,9 @@ class ModelAction
         }
 
         throw new BadMethodCallException(sprintf(
-            'Call to undefined method %s::%s()', static::class, $method
+            'Call to undefined method %s::%s()',
+            static::class,
+            $method
         ));
     }
 }
