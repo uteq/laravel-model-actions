@@ -44,8 +44,7 @@ This is the contents of the published config file:
 return [
     /**
      * The namespace where to find the actions.
-     * By default it will look for the actions one folder up
-     * than the Actions folder and than the folder name with the name of the class.
+     * By default it will look for the actions in ../Actions/MODEL/*
      */
     'namespace' => null,
 

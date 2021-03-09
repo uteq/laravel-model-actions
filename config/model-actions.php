@@ -5,6 +5,7 @@ return [
      * The namespace where to find the actions.
      * By default it will look for the actions one folder up
      * than the Actions folder and than the folder name with the name of the class.
+     * This will look like this ../Actions/MODEL/*
      *
      * ```
      * App
