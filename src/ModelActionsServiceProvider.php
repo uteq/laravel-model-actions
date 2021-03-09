@@ -15,11 +15,8 @@ class ModelActionsServiceProvider extends PackageServiceProvider
          *
          * More info: https://github.com/spatie/laravel-package-tools
          */
-//        $package
-//            ->name('laravel-model-actions')
-//            ->hasConfigFile()
-//            ->hasViews()
-//            ->hasMigration('create_laravel_model_actions_table')
-//            ->hasCommand(ModelActionsCommand::class);
+        $package
+            ->name('laravel-model-actions')
+            ->hasConfigFile();
     }
 }
