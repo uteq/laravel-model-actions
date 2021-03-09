@@ -116,7 +116,7 @@ class Destroy
     
     public __invoke(User $user, array $input = [])
     {
-        $this->destroyer($user, $input);
+        ($this->destroyer)($user, $input);
     }
 }
 ```
