@@ -20,6 +20,9 @@ This package was inspired by this read about OOP: https://www.tonysm.com/when-ob
 Especially the last part about actions being added to a model made sense to me.
 This will keep your models clean, and your actions separated.
 
+The idea behind this package is that adding actions makes your application more scalable.
+'Grouping' these actions by adding them to a model, makes it easier to comprehend where the action is for. It is more declarative having your model $user->action() perform an action than having the action out of the blue. To create more context you would have to always prefix your action UserCreateAction for example. 
+
 You will need php 8.0
 
 ## Installation
