@@ -106,14 +106,14 @@ $user->action('update', $input);
 ```
 
 ## Dependency injection in Actions
-Dependency injection in the __construct of the is by default.
+Dependency injection in the __construct of the action is by default.
 So you can do this:
 
 ```php
 class Destroy
 {
     public function __construct(
-        PublicDestroyer $destroyer,
+        protected PublicDestroyer $destroyer,
     ) { }
     
     public __invoke(User $user, array $input = [])
