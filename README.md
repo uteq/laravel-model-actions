@@ -98,7 +98,7 @@ class Update
 As you can see the $user will automatically be injected into the __invoke method.
 
 The name of the Action class will be used as the method name.
-So a class UpdateImage will be accessible using User::action()->update($input); 
+So a class UpdateImage will be accessible using User::action()->updateImage($input); 
 
 ```php
 $user->action()->update($input);
