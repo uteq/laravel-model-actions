@@ -23,6 +23,8 @@ This will keep your models clean, and your actions separated.
 The idea behind this package is that adding actions makes your application more scalable.
 'Grouping' these actions by adding them to a model, makes it easier to comprehend where the action is for. It is more declarative having your model $user->action() perform an action than having the action out of the blue. To create more context you would have to always prefix your action UserCreateAction for example. 
 
+Not convinced about using Actions in your application? Read this excellent blog post of Brent from Spatie.be  https://stitcher.io/blog/laravel-beyond-crud-03-actions
+
 You will need php 8.0
 
 ## Installation
