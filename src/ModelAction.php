@@ -48,12 +48,25 @@ class ModelAction
         return (new ReflectionClass($this->class))->getShortName();
     }
 
-    public function __call($method, $arguments)
+    public function resolveActionClass($method)
     {
         if (isset($this->actions[$method])) {
+            return $this->actions[$method];
+        }
+
+        if (in_array($method, $this->actions)) {
+            return $method;
+        }
+
+        return null;
+    }
+
+    public function __call($method, $arguments)
+    {
+        if ($actionClass = $this->resolveActionClass($method)) {
             $actionMethod = config('model-actions.method');
 
-            $action = app()->make($this->actions[$method]);
+            $action = app()->make($actionClass);
 
             return $actionMethod
                 ? $action->{$actionMethod}($this->class, $arguments)

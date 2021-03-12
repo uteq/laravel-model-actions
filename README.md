@@ -15,6 +15,12 @@ or
 ```php
 $user->action('update', $input);
 ```
+or
+```php
+use App\Actions\User\Update;
+
+$user->action(Update::class, $input);
+```
 
 This package was inspired by this read about OOP: https://www.tonysm.com/when-objects-are-not-enough/#objects-in-the-large
 Especially the last part about actions being added to a model made sense to me.
