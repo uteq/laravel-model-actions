@@ -69,8 +69,8 @@ class ModelAction
             $action = app()->make($actionClass);
 
             return $actionMethod
-                ? $action->{$actionMethod}($this->class, $arguments)
-                : $action($this->class, $arguments);
+                ? $action->{$actionMethod}($this->class, $arguments[0] ?? [])
+                : $action($this->class, $arguments[0] ?? []);
         }
 
         $class = $this->namespace . '\\' . ucfirst($method);

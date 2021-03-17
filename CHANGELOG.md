@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-model-actions` will be documented in this file.
 
-## 1.0.0 - 202X-XX-XX
+## 1.1.0 - 2021-03-09
+
+- allow using action class for action
+
+## 1.0.0 - 2021-03-09
 
 - initial release
