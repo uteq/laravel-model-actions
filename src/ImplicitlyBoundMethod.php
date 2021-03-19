@@ -33,8 +33,12 @@ class ImplicitlyBoundMethod extends BoundMethod
         if ($parameter->isVariadic()) {
             // this last param will pick up the rest - reindex any remaining parameters
             $parameters = array_merge(
-                array_filter($parameters, function ($key) { return ! is_int($key); }, ARRAY_FILTER_USE_KEY),
-                array_values(array_filter($parameters, function ($key) { return is_int($key); }, ARRAY_FILTER_USE_KEY))
+                array_filter($parameters, function ($key) {
+                    return ! is_int($key);
+                }, ARRAY_FILTER_USE_KEY),
+                array_values(array_filter($parameters, function ($key) {
+                    return is_int($key);
+                }, ARRAY_FILTER_USE_KEY))
             );
 
             return;
