@@ -18,12 +18,14 @@ return [
      * └── Models
      * └── User.php
      * ```
+     *
+     * DISABLED FOR NOW BECAUSE I AM NOT ABLE TO PROPERLY TEST THIS
      */
-    'namespace' => null,
+//    'namespace' => null,
 
     /**
      * You can overwrite the method used to handle the
      * action. By default this is __invoke.
      */
-    'method' => null,
+    'method' => '__invoke',
 ];

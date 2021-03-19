@@ -6,17 +6,24 @@ use Uteq\ModelActions\ModelAction;
 
 trait WithActions
 {
-    protected static $actionClass;
+    protected static $actionClassMap = [];
 
-    public function action($action = null, array $input = [])
+    public static function do($action = null, ...$input)
     {
-        $actionClass = static::$actionClass ??= new ModelAction(
+        return (new static)->action($action, ...$input);
+    }
+
+    public function action($action = null, ...$input)
+    {
+        $key = md5(static::class . '.' . $action);
+
+        $actionClass = static::$actionClassMap[$key] ??= new ModelAction(
             class: $this ?? static::class,
             namespace: config('model-actions.namespace'),
         );
 
         return $action
-            ? $actionClass->{$action}($input)
+            ? $actionClass->{$action}(...$input)
             : $actionClass;
     }
 }

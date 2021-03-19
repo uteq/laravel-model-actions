@@ -8,17 +8,21 @@
 
 This package will magically add actions to a model. Simply adding the WithActions trait:
 
+
+You can also use a static method
 ```php
-$user->action()->update($input);
+use App\Models\User;
+use App\Actions\User\Create;
+
+User::do(Create::class, $input);
 ```
-or
-```php
-$user->action('update', $input);
-```
-or
+
+And a concrete method
 ```php
 use App\Actions\User\Update;
 
+$user->action()->update($input);
+$user->action('update', $input);
 $user->action(Update::class, $input);
 ```
 
@@ -51,20 +55,15 @@ This is the contents of the published config file:
 ```php
 return [
     /**
-     * The namespace where to find the actions.
-     * By default it will look for the actions in ../Actions/MODEL/*
-     */
-    'namespace' => null,
-
-    /**
      * You can overwrite the method used to handle the
      * action. By default this is __invoke.
      */
-    'method' => null,    
+    'method' => '__invoke',    
 ];
 ```
 ## Usage
 
+### On your model
 Add the WithActions trait to the model
 ```php
 use Uteq\ModelActions\Concerns\WithActions;
@@ -75,6 +74,8 @@ class User extends Model
     use WithActions;
 }
 ```
+
+### Directory
 
 The actions should be added in the following folder structure
 
@@ -90,6 +91,8 @@ App
     └── User.php
 ```
 
+
+
 After that you can always access the actions from your model:
 
 This is how an action class looks like:
@@ -97,23 +100,22 @@ This is how an action class looks like:
 ```php
 class Update
 {
-    public function __invoke(User $user, array $input = [])
+    public function __invoke(User $model, array $input = [])
     {
         // Now add you own logic here
     }
 }
 ```
-As you can see the $user will automatically be injected into the __invoke method.
+As you can see the $user will automatically be injected into the __invoke method. The system knows the user because you are calling in from the user. Please note that the model is always the first parameter.
 
 The name of the Action class will be used as the method name.
 So a class UpdateImage will be accessible using User::action()->updateImage($input); 
 
 ```php
-$user->action()->update($input);
-$user->action('update', $input);
+$user->action(Update::class, $input);
 ```
 
-## Dependency injection in Actions
+### Dependency injection in Actions
 Dependency injection in the __construct of the action is by default.
 So you can do this:
 
@@ -129,6 +131,41 @@ class Destroy
         ($this->destroyer)($user, $input);
     }
 }
+```
+
+### Parameter binding
+Parameter binding for model actions is pretty straight forward. We have Named parameters (see below) and simply using the given order:
+
+```php
+class Action
+{
+    public function __invoke($var1, $var2)
+    {
+    
+    }
+}
+```
+
+```php
+User::do(Action::class, 'var1', 'var2');
+```
+
+### Named parameters
+Utilizing php 8's named paramters you are able to be very strict into what your action class accepts.
+
+```php
+class Action
+{
+    public function __invoke($name)
+    {
+    
+    }
+}
+```
+
+
+```php
+User::do(Action::class, name: 'test');
 ```
 
 ## Testing

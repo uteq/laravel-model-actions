@@ -20,7 +20,7 @@ class ModelAction
 
     public function init()
     {
-        $this->namespace ??= $this->getNamespace();
+        $this->namespace = $this->getNamespace();
 
         $this->filesystem ??= new Filesystem;
 
@@ -33,19 +33,57 @@ class ModelAction
 
     public function getNamespace(): string
     {
+        if ($this->namespace) {
+            $filename = Str::of($this->class::class)->afterLast('\\');
+
+            return $this->namespace . '\\' . $filename;
+        }
+
         return str_replace('\\Models\\', '\\Actions\\', $this->class::class);
     }
 
     public function getPath(): string
     {
-        return base_path()
-            . DIRECTORY_SEPARATOR
-            . str_replace('\\', DIRECTORY_SEPARATOR, (string)Str::before(app_path(), '/App') . DIRECTORY_SEPARATOR . $this->namespace);
+        $class = new ReflectionClass(new ($this->class::class));
+        $rootPath = Str::beforeLast(Str::beforeLast($class->getFileName(), DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR);
+
+        if (config('model-actions.namespace')) {
+            return $this->generatePathFromNamespace($this->namespace);
+        }
+
+        return realpath($rootPath . DIRECTORY_SEPARATOR . '/Actions');
+    }
+
+    public static function generatePathFromNamespace($namespace)
+    {
+        $path = config('model-actions.path', app('path'));
+        $name = Str::of($namespace)->finish('\\')
+            ->replaceFirst(config('model-actions.app_namespace', app()->getNamespace()), '');
+
+        return $path . '/' . str_replace('\\', '/', $name);
     }
 
     public function getName(): string
     {
         return (new ReflectionClass($this->class))->getShortName();
+    }
+
+    public function __call($method, $arguments)
+    {
+        if ($actionClass = $this->resolveActionClass($method)) {
+            $actionMethod = config('model-actions.method') ?: '__invoke';
+            $action = app()->make($actionClass);
+
+            if ($this->class->getKey()) {
+                $arguments['model'] = $this->class;
+            }
+
+            return ImplicitlyBoundMethod::call(app(), [$action, $actionMethod], $arguments);
+        }
+
+        $class = $this->namespace . '\\' . ucfirst($method);
+
+        throw new \Exception(sprintf('Class not found `%s`', $class), 500);
     }
 
     public function resolveActionClass($method)
@@ -59,22 +97,5 @@ class ModelAction
         }
 
         return null;
-    }
-
-    public function __call($method, $arguments)
-    {
-        if ($actionClass = $this->resolveActionClass($method)) {
-            $actionMethod = config('model-actions.method');
-
-            $action = app()->make($actionClass);
-
-            return $actionMethod
-                ? $action->{$actionMethod}($this->class, $arguments[0] ?? [])
-                : $action($this->class, $arguments[0] ?? []);
-        }
-
-        $class = $this->namespace . '\\' . ucfirst($method);
-
-        throw new \Exception(sprintf('Class not found `%s`', $class), 500);
     }
 }

@@ -26,6 +26,9 @@ class TestCase extends Orchestra
 
     public function getEnvironmentSetUp($app)
     {
+        $app['config']->set('model-actions.path', dirname(dirname(__FILE__)) .'/src');
+        $app['config']->set('model-actions.app_namespace', 'Uteq\\ModelActions\\');
+
         $app['config']->set('database.default', 'sqlite');
         $app['config']->set('database.connections.sqlite', [
             'driver' => 'sqlite',
