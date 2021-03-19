@@ -168,6 +168,30 @@ class Action
 User::do(Action::class, name: 'test');
 ```
 
+## Examples
+
+### Apply with actions to all your models
+A convenient way to add the WithActions to all your Models is by simply extending the Eloquent Model class and extend upon that class.
+
+```php
+namespace App\Support;
+
+use Uteq\ModelActions\Concerns\WithActions;
+
+class Model extends \Illuminate\Database\Eloquent\Model
+{
+    use WithActions;
+}
+```
+
+```php
+class ActionModel extends \App\Support\Model
+{
+
+} 
+```
+
+
 ## Testing
 
 ```bash
