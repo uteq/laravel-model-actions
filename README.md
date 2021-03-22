@@ -12,6 +12,7 @@ Add the trait to your model
 ```php
 use Uteq\ModelActions\Concerns\WithActions;
 use Illuminate\Database\Eloquent\Model;
+
 class User extends Model
 {
     use WithActions;
