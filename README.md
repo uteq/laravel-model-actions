@@ -8,22 +8,26 @@
 
 This package will magically add actions to a model. Simply adding the WithActions trait:
 
-
-You can also use a static method
+Add the trait to your model
 ```php
-use App\Models\User;
-use App\Actions\User\Create;
-
-User::do(Create::class, $input);
+use Uteq\ModelActions\Concerns\WithActions;
+use Illuminate\Database\Eloquent\Model;
+class User extends Model
+{
+    use WithActions;
+}
 ```
 
-And a concrete method
+And than use it in all sorts of ways:
 ```php
-use App\Actions\User\Update;
-
 $user->action()->update($input);
 $user->action('update', $input);
-$user->action(Update::class, $input);
+$user->action(\App\Actions\User\Update::class, $input);
+```
+
+Whenever you need to call a method without on a model that does not (yet) have an active record in the database, you can also use this static method.
+```php
+User::do(Create::class, $input);
 ```
 
 This package was inspired by this read about OOP: https://www.tonysm.com/when-objects-are-not-enough/#objects-in-the-large
