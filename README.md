@@ -26,7 +26,7 @@ $user->action('update', $input);
 $user->action(\App\Actions\User\Update::class, $input);
 ```
 
-Whenever you need to call a method without on a model that does not (yet) have an active record in the database, you can also use this static method.
+Whenever you need to call a method on a model that does not (yet) have an active record in the database, you can also use this static method.
 ```php
 User::do(Create::class, $input);
 ```
